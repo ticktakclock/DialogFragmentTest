@@ -1,38 +1,47 @@
 package com.example.myapplication
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val loadingDialog: MyDialogFragment by lazy{ MyDialogFragment.newInstance()}
+    private val loadingDialog: MyDialogFragment = MyDialogFragment.newInstance()
     private var isResumed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("TAG", "onCreate $this")
         setContentView(R.layout.activity_main)
         button.setOnClickListener {
             Handler().postDelayed({
-                Log.d("TAG", "post delayed 1000")
-                if (isResumed) loadingDialog.show(supportFragmentManager, null)
+                Log.d("TAG", "post delayed 1000 $loadingDialog")
+                Log.d("TAG", "fragmentmanager $supportFragmentManager")
+                loadingDialog.show(supportFragmentManager, null)
             }
                 , 1000
             )
+
             Handler().postDelayed(
                 {
-                    Log.d("TAG", "post delayed 3000")
+                    Log.d("TAG", "post delayed 3000 $loadingDialog")
+                    Log.d("TAG", "activity $this")
+                    Log.d("TAG", "fragmentmanager $supportFragmentManager")
                     if(supportFragmentManager.isDestroyed.not()) {
                         loadingDialog.dismiss()
                     } else{
                         // TODO: なんとかして消す
                     }
-//                    loadingDialog.dismissAllowingStateLoss()
-                }, 3000
+                }, 10000
             )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("TAG", "onStart")
     }
 
     override fun onResume() {
